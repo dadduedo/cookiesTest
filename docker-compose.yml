@@ -1,0 +1,32 @@
+version: "3.7"
+services:
+  app:
+    container_name: testCookies
+    image: node:18
+    volumes:
+      - ./src:/projects
+    working_dir: /projects
+    restart: always
+    ports:
+      - "727:3000"
+    command: sh -c "if [ ! -d /projects/node_modules ]; then npm install; fi && npm run start"
+  postgres:
+    image: postgres:latest
+    container_name: my-postgres-container
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: ciao
+      POSTGRES_DB: database
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - mynetwork
+
+volumes:
+  postgres:
+
+networks:
+  mynetwork:
+    driver: bridge
